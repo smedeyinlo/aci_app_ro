@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+  <head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <link rel="icon" href="/static/icons/jarvis.ico">
+    <title>ACI APP</title>
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/css/dashboard.css" rel="stylesheet">
+    <link href="/static/css/sidebar-home.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/bootstrap-datetimepicker.css">
+	<link rel="stylesheet" type="text/css" href="/static/css/bootstrap-responsive.min.css">
+
+    <script type="text/javascript" src="/static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/static/js/bootstrap-datetimepicker.js"></script>
+	
+    
+    
+    
+
+    
+    
+
+
+
+    
+
+
+  </head>
+
+  <body >
+
+    <div class="navbar navbar-fixed-top" role="navigation">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+            <a class="navbar-brand" href="/"><img style="height: 30px;" src="/static/images/netdevops-logo.gif"></a>
+            <!--[if gte IE 8]>
+            <p><br><span style="font-size: small; color: red; ">We've detected that IE is being used. IE is not supported by this portal. You should switch to Chrome or Firefox</span>
+            <![endif]-->
+        </div> <!--navbar-header-->
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-left">
+              <li><h4><span class='text-info'>ACI APP Version 1.1, deployment date: Tue Jul 16 15:27:33 BST 2019</span>
+</h4></li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href='{{ url }}'>{{ username }}@{{ apic }}</a></li>
+            
+          </ul>
+        </div> <!--navbar-collapse-->
+      </div><!--container-fluid-->
+    </div><!--navbar-inverse-->
+      <div id="wrapper" >
+        <div id="sidebar-wrapper">
+            <ul class="sidebar-nav" style="font-size: 12px;">
+                
+<li class="sidebar-brand">
+        <a id="menu-toggle" href="/aciapp/?token={{token}}">Home<span id="main_icon" class="glyphicon glyphicon-home"></span></a>
+    </li>
+	
+	<div id="sidebar-footer">
+        <ul class="sidebar-nav">
+            <li><a href="/aciapp/?token={{token}}">APIC</a></li>
+        </ul>
+    </div>
+	
+	<div id="sidebar-footer">
+        <ul class="sidebar-nav">
+            <li><a href="#collapseTwo" data-toggle="collapse" data-parent="#accordian">Show<span id="sub_icon" class="glyphicon glyphicon-search"></span></a></li>
+            <div id="collapseTwo" class="panel-collapse collapse in">
+                <ul style="list-style: none;">
+				<li><a class="sub_nav_button active" href="tenanttable?token={{token}}">Tenants</a></li>
+				<li><a class="sub_nav_button active" href="endpointtable?token={{token}}">Endpoints</a></li>
+				<li><a class="sub_nav_button active" href="epgtable?token={{token}}">EPGs</a></li>
+				<li><a class="sub_nav_button active" href="bdtable?token={{token}}">Bridge Domains</a></li>
+				<li><a class="sub_nav_button active" href="contracttable?token={{token}}">Contracts</a></li>
+				<li><a class="sub_nav_button active" href="vlantable?token={{token}}">VLANs</a></li>
+				<li><a class="sub_nav_button active" href="vlandomaintable?token={{token}}">VLAN per Domains</a></li>
+				<li><a class="sub_nav_button " href="nodetable?token={{token}}">Nodes</a></li>
+				<li><a class="sub_nav_button active" href="porttable?token={{token}}">Interfaces</a></li>
+				<li><a class="sub_nav_button active" href="hosttable?token={{token}}">Hosts</a></li>
+				<li><a class="sub_nav_button active" href="ipgtable?token={{token}}">IPG</a></li>
+				<li><a class="sub_nav_button active" href="fextable?token={{token}}">FEX</a></li>
+				<li><a class="sub_nav_button active" href="portstattable?token={{token}}">Interfaces Statistics</a></li>
+                <li><a class="sub_nav_button active" href="lldptable?token={{token}}">LLDP</a></li>
+                </ul>
+            </div>
+        </ul>
+    </div>
+	
+	<div id="sidebar-footer">
+        <ul class="sidebar-nav">
+            <li><a href="#collapseOne" data-toggle="collapse" data-parent="#accordian">Snapshot<span id="sub_icon" class="glyphicon glyphicon-camera"></span></a></li>
+			<div id="collapseOne" class="panel-collapse collapse">
+                <ul style="list-style: none;">
+				<li><a class="sub_nav_button active" href="snapshottable?token={{token}}">Show Snapshots</a></li>
+				<li><a class="sub_nav_button active" href="createsnapshot?token={{token}}">Take Snapshot</a></li>
+			    </ul>
+            </div>
+        </ul>
+    </div>
+	
+
+
+
+    <div id="sidebar-footer">
+        <ul class="sidebar-nav">
+            <li><a href="about/?token={{token}}">About<span id="sub_icon" class="glyphicon glyphicon-info-sign"></span></a></li>
+        </ul>
+    </div>
+	
+            </ul>
+        </div>
+        <!--sidebar-wrapper-->
+        <div id="page-content-wrapper">
+                
+<div style="display: flex; flex-wrap: wrap; flex-direction: row">
+    
+    <style type='text/css'>
+        /* Dropdown Button */
+        .dropbtn {
+            background-color: white;
+            padding: 8px;
+            font-size: 16px;
+            border: none;
+        }
+
+        /* The container <div> - needed to position the dropdown content */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        /* Dropdown Content (Hidden by Default) */
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: white;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+
+        /* Links inside the dropdown */
+        .dropdown-content a {
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        /* Change color of dropdown links on hover */
+        .dropdown-content a:hover {background-color: white;}
+
+        /* Show the dropdown menu on hover */
+        .dropdown:hover .dropdown-content {display: block;}
+
+        /* Change the background color of the dropdown button when the dropdown content is shown */
+        .dropdown:hover .dropbtn {background-color: white;}
+    </style>
+
+<form class="form-horizontal" action={{ formaction }} method="get" enctype="multipart/form-data" role="form" >
+<input id="csrf_token" name="csrf_token" value="{{ csrf_token() }}" type="hidden">
+<input id="token" name="token" value="{{ token }}" type="hidden">
+
+
+<div class="form-group span12">
+	<label style="white-space: nowrap; text-align: left" class="control-label col-lg-4" for="id_label"><b>{{ formname }}</b></label> 
+	<label class="control-label col-lg-2" for="id_label">Filter</label> 
+	<input class="button" type="submit" name="Submit-Go" value="Display"/>
+	<div class="col-lg-2">
+	<input class="form-control input-md" id="grep" name="grep" placeholder="leave blank to display all" type="text" onchange="this.form.submit()"/>
+	</div>
+</div>
+
+
+
+<noscript><input type="submit" value="Submit"></noscript>
+
+<style>
+
+table { font-size: small;
+}
+thead { background: #ceceff;
+}
+
+</style>
+ 
+
+ <div>
+<table id="mytable" class="table-striped table-bordered table-hover fixed" width="80%">
+    <thead>
+     <tr>
+	   <th></th>
+       <th>{{ tableheader[0] }}</th>
+       <th>{{ tableheader[1] }}</th>
+       <th>{{ tableheader[2] }}</th>
+       <th>{{ tableheader[3] }}</th>
+       <th>{{ tableheader[4] }}</th>
+       <th>{{ tableheader[5] }}</th>
+       <th>{{ tableheader[6] }}</th>
+       <th>{{ tableheader[7] }}</th>
+	   <th>{{ tableheader[8] }}</th>
+       <th>{{ tableheader[9] }}</th>
+     </tr>
+    </thead>
+ <tbody>
+  {% for group in tablerows %}
+     {% for row in group %}
+     <tr>
+	   <td style="white-space: pre-line">{{ loop.index }}</td>
+       <td style="white-space: pre">{{ row[0] }}</td>
+       <td style="white-space: pre">{{ row[1] }}</td>
+       <td style="white-space: pre">{{ row[2] }}</td>
+       <td style="white-space: pre">{{ row[3] }}</td>
+       <td style="white-space: pre">{{ row[4] }}</td>
+       <td style="white-space: pre-line">{{ row[5] }}</td>
+       <td style="white-space: pre-line">{{ row[6] }}</td>
+       <td style="white-space: pre-line">{{ row[7] }}</td>
+       <td style="white-space: pre-line">{{ row[8] }}</td>
+       <td style="white-space: pre-line">{{ row[9] }}</td>
+    </tr>
+    {% endfor %}
+  {% endfor %}
+ </tbody>
+
+</table>
+</div>
+</form>
+        </div><!--page-content-wrapper-->
+      </div> <!-- wrapper -->
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script type="text/javascript" src="/static/js/sidebar.js"></script>
+
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script type="text/javascript" src="/static/js/ie10-viewport-bug-workaround.js"></script>
+    
+    
+    
+
+
+  </body>
+</html>
+
