@@ -25,13 +25,13 @@ body h1 h2 h3 h4 p {
  */
 .navbar {
 	background: #ffffff;
-	border-bottom: 2px solid #017eb6;
+	border-bottom: 2px solid #334;
 }
 .navbar-default .navbar-brand {
 	color: #017eb6;
 }
 .navbar-fixed-top {
-	border-bottom: 2px solid #017eb6;
+	border-bottom: 2px solid #334;
 }
 .icon-bar{
 	color: #017eb6;
