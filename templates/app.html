@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+  <head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <link rel="icon" href="/static/icons/jarvis.ico">
+    <title>ONE ACI APP</title>
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/css/dashboard.css" rel="stylesheet">
+    <link href="/static/css/sidebar-home.css" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="/static/css/bootstrap-responsive.min.css">
+    <script type="text/javascript" src="/static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
+
+  </head>
+
+  <body >
+
+    <div class="navbar navbar-fixed-top" role="navigation">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+            <a class="navbar-brand" href="/"><img style="height: 30px;" src="/static/images/netdevops-logo.gif"></a>
+        </div>
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+              <li><h4><span class='text-info'>ACI APP Version 2.2</span></h4></li>
+          </ul>
+          <ul class="nav navbar-nav navbar-left" style="font-size: 18px;">
+			{% if apic == None %}
+            <li><a href="/aciapp" style="color:red">Please Login to APIC to continue</a></li>
+			{% else %} 
+			<li><a href='{{ url }}'>{{ username }}@{{ apic }}</a></li>
+			{% endif %} 
+          </ul>
+        </div> <!--navbar-collapse-->
+      </div><!--container-fluid-->
+    </div><!--navbar-inverse-->
+      <div id="wrapper" >
+        <div id="sidebar-wrapper">
+            <ul class="sidebar-nav" style="font-size: 12px;">
+
+    <li class="sidebar-brand">
+        <a id="menu-toggle" id="aciapp1" href="/aciapp/" onclick="Updateurl1(this.id)">Home<span id="main_icon" class="glyphicon glyphicon-home"></span></a>
+    </li>
+
+	<div id="sidebar-footer">
+        <ul class="sidebar-nav">
+            <li><a id="aciapp2" href="/aciapp/" onclick="Updateurl1(this.id)">APIC</a></li>
+        </ul>
+    </div>
+
+	<div id="sidebar-footer">
+        <ul class="sidebar-nav">
+            <li><a href="#collapseTwo" data-toggle="collapse" data-parent="#accordian">Show<span id="sub_icon" class="glyphicon glyphicon-search"></span></a></li>
+            <div id="collapseTwo" class="panel-collapse collapse in">
+                <ul style="list-style: none;">
+				<li><a class="sub_nav_button active" id="tenant" href="/aciapp/table?token={{token}}&dest=tenant">Tenants</a></li>
+				<li><a class="sub_nav_button active" id="endpoint" href="/aciapp/table?token={{token}}&dest=endpoint">Endpoints</a></li>
+				<li><a class="sub_nav_button active" id="epg" href="/aciapp/table?token={{token}}&dest=epg">EPGs</a></li>
+				<li><a class="sub_nav_button active" id="bd" href="/aciapp/table?token={{token}}&dest=bd">Bridge Domains</a></li>
+				<li><a class="sub_nav_button active" id="contract" href="/aciapp/table?token={{token}}&dest=contract">Contracts</a></li>
+				<li><a class="sub_nav_button active" id="vlan" href="/aciapp/table?token={{token}}&dest=vlan">VLANs</a></li>
+				<li><a class="sub_nav_button active" id="vlandomain" href="/aciapp/table?token={{token}}&dest=vlandomain">VLAN per Domains</a></li>
+				<li><a class="sub_nav_button active" id="node" href="/aciapp/table?token={{token}}&dest=node">Nodes</a></li>
+				<li><a class="sub_nav_button active" id="port" href="/aciapp/table?token={{token}}&dest=port">Interfaces</a></li>
+				<li><a class="sub_nav_button active" id="host" href="/aciapp/table?token={{token}}&dest=host">Hosts</a></li>
+				<li><a class="sub_nav_button active" id="ipg" href="/aciapp/table?token={{token}}&dest=ipg">IPG</a></li>
+				<li><a class="sub_nav_button active" id="fex" href="/aciapp/table?token={{token}}&dest=fex">FEX</a></li>
+				<li><a class="sub_nav_button active" id="portstat" href="/aciapp/table?token={{token}}&dest=portstat">Interfaces Statistics</a></li>
+                <li><a class="sub_nav_button active" id="lldp" href="/aciapp/table?token={{token}}&dest=lldp">LLDP</a></li>
+                <li><a class="sub_nav_button active" id="snapshot" href="/aciapp/table?token={{token}}&dest=snapshot">Snapshots</a></li>
+			    </ul>
+            </div>
+        </ul>
+    </div>
+
+        </ul>
+        </div>
+        <!--sidebar-wrapper-->
+        <div id="page-content-wrapper">
+            <div style="display: flex; flex-wrap: wrap; flex-direction: row">
+
+    <style type='text/css'>
+        /* Dropdown Button */
+        .dropbtn {
+            background-color: white;
+            padding: 8px;
+            font-size: 16px;
+            border: none;
+        }
+
+        /* The container  - needed to position the dropdown content */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        /* Dropdown Content (Hidden by Default) */
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: white;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+
+        /* Links inside the dropdown */
+        .dropdown-content a {
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        /* Change color of dropdown links on hover */
+        .dropdown-content a:hover {background-color: white;}
+
+        /* Show the dropdown menu on hover */
+        .dropdown:hover .dropdown-content {display: block;}
+
+        /* Change the background color of the dropdown button when the dropdown content is shown */
+        .dropdown:hover .dropbtn {background-color: white;}
+    </style>
+
+<form class="form-horizontal" id="id_form" action="" method="get" enctype="multipart/form-data" role="form" onsubmit="SubmitSearch(); return true;">
+<input id="csrf_token" name="csrf_token" value="{{ csrf_token() }}" type="hidden">
+<input id="token" name="token" value="" type="hidden">
+<input id="dest" name="dest" value="" type="hidden">
+
+<div class="form-group span12">
+	<label style="white-space: nowrap; text-align: left" class="control-label col-lg-4" id="id_title"><b></b></label>
+	<label class="control-label col-lg-2" for="id_label">Filter</label>
+	<input class="button" type="submit" name="Submit-Go" value="Display"/>
+	<div class="col-lg-2">
+	<input class="form-control input-md" id="grep" name="grep" value="" placeholder="leave blank to display all" type="text"/>
+	</div>
+</div>
+
+
+
+
+
+
+
+
+
+<style>
+
+table { font-size: small;
+}
+thead { background: #ceceff;
+}
+
+</style>
+
+
+ <div>
+<table id="mytable" class="table-striped table-bordered table-hover" width="100%">
+ <thead>
+ </thead>
+ <tbody>
+ </tbody>
+</table>
+
+<script type="text/javascript">
+	var urlParams = new URLSearchParams(window.location.search);
+	var urltoken = urlParams.get('token');
+	var urldest = urlParams.get('dest');
+    var addr = window.location.host + window.location.pathname + urldest + ".json"
+	var mysearch = window.location.search;
+	var url = window.location.protocol + "//" + addr +  mysearch
+	
+	document.getElementById('token').value=urltoken;
+	console.log(url)
+	GetTable(url);
+	
+	function Tableurl(elementid){
+		var oldurl = document.getElementById(elementid).href;
+		var newurl = window.location.origin + "/aciapp/table" + elementid + ".json?token=" + urltoken;
+		GetTable(newurl);
+	}
+	
+	function Updateurl1(elementid){
+		var oldurl = document.getElementById(elementid).href;
+		var newurl = oldurl + "?token=" + urltoken;
+		document.getElementById(elementid).href = newurl;
+	}
+	
+	function Updateurl2(elementid){
+		var oldurl = document.getElementById(elementid).href;
+		var newurl = window.location.origin + "/aciapp/" + elementid + "?token=" + urltoken;
+		console.log(oldurl);
+		console.log(newurl);
+		document.getElementById(elementid).href = newurl;
+	}
+	
+	function SubmitSearch(){
+		document.getElementById('dest').value = urldest
+	}
+	
+    function Get(url){
+        var Httpreq = new XMLHttpRequest(); // a new request
+        Httpreq.open("GET",url,false);
+        Httpreq.send(null);
+        return Httpreq.responseText;          
+    }
+	function GetTable(url){
+		var data = JSON.parse(Get(url));
+		var thead = $('thead');
+		var tbody = $('tbody');
+		var tableheader
+		var tablerows
+		var tablerow_url
+		tableheader = data['header'];
+		thead.empty();
+		tbody.empty();
+		if (data.length < 1 ){
+		var eline = 'eline empty';
+		}
+		else if (data['row'].length < 1 && data['rows'].length < 1){
+		document.getElementById('id_title').innerHTML = data['title'];
+		var emptyline = 'emptyline empty';
+		}
+	    else if (data['rows'] != ''){
+		document.getElementById('id_title').innerHTML = data['title'];
+		var rline =   data['rows'];
+		tbody.append(rline);
+		}
+		else {
+		document.getElementById('id_title').innerHTML = data['title'];
+		tableheader = data['header'];
+		tablerow_url = data['row_url']; 
+		var hline = '<th></th>';
+		for (var k = 0; k < tableheader.length; k++) {
+		   hline = hline + '<th>' + tableheader[k] + '</th>';
+		}
+		thead.append('<tr>' + hline + '</tr>');
+		
+		if (data['title'] == 'Display Tenant list'){
+		for (var i = 0; i < data['row'][0].length; i++) {
+		tablerows = data['row'][0][i];		
+		var line = '<td style="white-space: pre">' + i + '</td>';		   
+		for (var j = 0; j < tablerows.length; j++) {
+			line = line + '<td style="white-space: pre"><a ' + tablerow_url[j] + tablerows[0] + ' onclick="GetTable(this.href); return false;">' + tablerows[j] + '</a></td>';	
+			}
+		tbody.append('<tr>' + line + '</tr>');
+		}
+		}
+		else {
+			for (var i = 0; i < data['row'][0].length; i++) {
+			tablerows = data['row'][0][i];		
+			var line = '<td style="white-space: pre">' + i + '</td>';		   
+			for (var j = 0; j < tablerows.length; j++) {
+				if (tablerows[j].length > 40 ) {
+					line = line + '<td style="white-space: pre-line"><a ' + tablerow_url[j] + tablerows[j] + ' onclick="GetTable(this.href); return false;">' + tablerows[j] + '</a></td>';	
+				}
+				else {
+					line = line + '<td style="white-space: pre"><a ' + tablerow_url[j] + tablerows[j] + ' onclick="GetTable(this.href); return false;">' + tablerows[j] + '</a></td>';	
+				}
+			}
+		tbody.append('<tr>' + line + '</tr>');
+		}
+		}
+		}
+	}
+
+</script>
+</div>
+</form>
+        </div><!--page-content-wrapper-style-->
+          </div> <!-- page-content-wrapper -->
+          </div> <!-- wrapper -->
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script type="text/javascript" src="/static/js/sidebar.js"></script>
+  </body>
+</html>
+
