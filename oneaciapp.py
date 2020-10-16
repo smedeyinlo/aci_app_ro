@@ -3,9 +3,9 @@
 # description     :aci app ro
 # author          :segun medeyinlo
 # date            :08102018
-# version         :2.5
+# version         :2.6
 # usage           :
-# notes           :updated 17082020
+# notes           :updated 15102020
 # python_version  :3.8.3
 # ==============================================================================
 
@@ -40,13 +40,13 @@ class aciDB:
         self.mso_template = ''
         self.mso_site = ''
         select_apic = self.apic.replace("https://", '')
-        if apic_url:
-            self.apic_site =[apic_dict[akey][0] for akey in apic_dict if select_apic == apic_dict[akey][2]][0]
-            self.mso_site = [apic_dict[akey][4] for akey in apic_dict if select_apic == apic_dict[akey][2]][0]
-            self.mso_schema = [apic_dict[akey][5] for akey in apic_dict if select_apic == apic_dict[akey][2]][0]
-            self.mso_template = [apic_dict[akey][6] for akey in apic_dict if select_apic == apic_dict[akey][2]][0]
-            self.mso_url = [apic_dict[akey][7] for akey in apic_dict if select_apic == apic_dict[akey][2]][0]
-            self.mso_domainid = [apic_dict[akey][8] for akey in apic_dict if select_apic == apic_dict[akey][2]][0]
+        #if apic_url:
+        #    self.apic_site =[apic_dict[akey][2].strip() for akey in apic_dict if select_apic == apic_dict[akey][0]][0]
+        #    self.mso_site = [apic_dict[akey][3].strip() for akey in apic_dict if select_apic == apic_dict[akey][0]][0]
+        #    self.mso_schema = [apic_dict[akey][4].strip() for akey in apic_dict if select_apic == apic_dict[akey][0]][0]
+        #    self.mso_template = [apic_dict[akey][5].strip() for akey in apic_dict if select_apic == apic_dict[akey][0]][0]
+        #    self.mso_url = [apic_dict[akey][6].strip() for akey in apic_dict if select_apic == apic_dict[akey][0]][0]
+        #    self.mso_domainid = [apic_dict[akey][7].strip() for akey in apic_dict if select_apic == apic_dict[akey][0]][0]
 
 
     def login(self, uid, pwd, apic):
@@ -693,6 +693,7 @@ class aciDB:
                                                     intf_dict[intf_name]['mode'] = []
                                                     intf_dict[intf_name]['encap'] = []
                                                     intf_dict[intf_name]['epg'] = []
+                                                    intf_dict[intf_name]['epg_descr'] = []
                                                     intf_dict[intf_name]['bd'] = []
         # get fex interfaces
         url = '/api/node/mo/uni/infra/.json?rsp-subtree=full&rsp-subtree-class=infraFexP'
@@ -766,6 +767,7 @@ class aciDB:
                                                         intf_dict[intf_name]['mode'] = []
                                                         intf_dict[intf_name]['encap'] = []
                                                         intf_dict[intf_name]['epg'] = []
+                                                        intf_dict[intf_name]['epg_descr'] = []
                                                         intf_dict[intf_name]['bd'] = []
         return intf_dict
 
@@ -796,20 +798,21 @@ class aciDB:
                 intf_dict[intf_name]['poolvlan'] = ipg_dict[ipg_name]['poolvlan']
 
             if intf_name in path_dict.keys() or ipg_name in path_dict.keys():
-
-                if intf_name in path_dict.keys():
-                    intf_dict[intf_name]['mode'] = path_dict[intf_name]['mode']
-                    intf_dict[intf_name]['encap'] = path_dict[intf_name]['encap']
-                    intf_dict[intf_name]['epg'] = path_dict[intf_name]['epg']
-                    intf_dict[intf_name]['epg_descr'] = path_dict[intf_name]['epg_descr']
-                    intf_dict[intf_name]['bd'] = path_dict[intf_name]['bd']
-
-                elif ipg_name in path_dict.keys():
+            
+                if ipg_name in path_dict.keys():
                     intf_dict[intf_name]['mode'] = path_dict[ipg_name]['mode']
                     intf_dict[intf_name]['encap'] = path_dict[ipg_name]['encap']
                     intf_dict[intf_name]['epg'] = path_dict[ipg_name]['epg']
                     intf_dict[intf_name]['epg_descr'] = path_dict[ipg_name]['epg_descr']
                     intf_dict[intf_name]['bd'] = path_dict[ipg_name]['bd']
+
+                elif intf_name in path_dict.keys():
+                    intf_dict[intf_name]['mode'] = path_dict[intf_name]['mode']
+                    intf_dict[intf_name]['encap'] = path_dict[intf_name]['encap']
+                    intf_dict[intf_name]['epg'] = path_dict[intf_name]['epg']
+                    intf_dict[intf_name]['epg_descr'] = path_dict[intf_name]['epg_descr']
+                    intf_dict[intf_name]['bd'] = path_dict[intf_name]['bd']
+        
         return intf_dict
 
     def get_ipg_name_dict(self):
@@ -976,6 +979,7 @@ class aciDB:
         path_dict = {}
         rsbd_dict = self.get_rsbd_dict()
         epg_name_dict = self.get_epg_name_dict()
+        lldp_ip_dict = self.get_lldp_ip_dict()
         url = '/api/class/fvIfConn.json'
         get_url = self.apic + url
         resp = self.mysession.get(get_url, verify=False)
@@ -983,7 +987,7 @@ class aciDB:
 
         for path in paths:
             if "fvIfConn" in path:
-                path_name = ''
+                path_names = []
                 path_dn = str(path['fvIfConn']['attributes']['dn'])
                 path_mode = str(path['fvIfConn']['attributes']['mode'])
                 path_encap = str(path['fvIfConn']['attributes']['encap'])
@@ -993,59 +997,67 @@ class aciDB:
                     path_name = str(path_dn.split('/stpathatt-[')[1].split(']')[0])
                     if len(path_name.split('/')) > 1:
                         path_name = path_node + '-' + 'eth' + str(path_dn.split('/stpathatt-[eth')[1].split(']')[0])
+                    path_names = [path_name]
                 elif '/extstpathatt-' in path_dn:
                     path_name = str(path_dn.split('/extstpathatt-[')[1].split(']')[0])
                     if len(path_name.split('/')) > 1:
                         path_fex = 'eth' + str(path_dn.split(']-extchid-')[1].split('/')[0]) + '/'
                         path_name = path_node + '-' + path_fex + str(
                             path_dn.split('/extstpathatt-[eth')[1].split(']')[0])
-                elif '/dyatt-' in path_dn:
+                        path_names = [path_name]
+                elif '/dyatt-' in path_dn and 'pathep-' in path_dn:
                     path_name = str(path_dn.split('/pathep-[')[1].split(']')[0])
                     if len(path_name.split('/')) > 1:
                         path_name = path_node + '-' + 'eth' + str(path_dn.split('/pathep-[eth')[1].split(']')[0])
-                if path_name not in path_dict.keys():
-                    path_dict[path_name] = {}
-                    path_dict[path_name]['name'] = path_name
-                    path_dict[path_name]['descr'] = ''
-                    path_dict[path_name]['dn'] = []
-                    path_dict[path_name]['mode'] = []
-                    path_dict[path_name]['encap'] = []
-                    path_dict[path_name]['epg'] = []
-                    path_dict[path_name]['epg_descr'] = []
-                    path_dict[path_name]['bd'] = []
-                if 'unknown' == path_encap: path_encap = 'N/A'
-                path_dict[path_name]['dn'].append(path_dn)
+                    path_names = [path_name]
+                elif '/dyatt-' in path_dn and 'lsnode-' in path_dn:
+                    path_name = str(path_dn.split('/lsnode-')[1].split(']')[0])
+                    if path_name in lldp_ip_dict.keys():
+                        path_names = lldp_ip_dict[path_name]['ports']
+                for path_name in path_names:               
+                    if path_name not in path_dict.keys():
+                        path_dict[path_name] = {}
+                        path_dict[path_name]['name'] = path_name
+                        path_dict[path_name]['descr'] = ''
+                        path_dict[path_name]['dn'] = []
+                        path_dict[path_name]['mode'] = []
+                        path_dict[path_name]['encap'] = []
+                        path_dict[path_name]['epg'] = []
+                        path_dict[path_name]['epg_descr'] = []
+                        path_dict[path_name]['bd'] = []
+                    if 'unknown' == path_encap: path_encap = 'N/A'
+                    path_dict[path_name]['dn'].append(path_dn)
 
-                if 'uni/epp/fv-' in path_dn and '/ap-' in path_dn and '/epg-' in path_dn:
-                    path_locale = str(path_dn.split('uni/epp/fv-[')[1].split(']')[0])
-                    path_dict[path_name]['mode'].append(path_mode)
-                    path_dict[path_name]['encap'].append(path_encap)
-                    path_dict[path_name]['epg'].append(path_locale)
-                    if path_locale in epg_name_dict.keys():
-                        path_dict[path_name]['epg_descr'].append(epg_name_dict[path_locale]['descr'])
-                    else:
-                        path_dict[path_name]['epg_descr'].append('')
-                    if path_locale in rsbd_dict.keys():
-                        path_dict[path_name]['bd'].append(rsbd_dict[path_locale]['name'])
-                    else:
-                        path_dict[path_name]['bd'].append('')
-                if 'uni/epp/fv-' in path_dn and '/lDevVip-' in path_dn and ']-ctx-[' in path_dn and ']-bd-[' in path_dn and '/BD-' in path_dn:
-                    path_locale = str(path_dn.split('uni/epp/fv-[')[1])
-                    path_dict[path_name]['mode'].append(path_mode)
-                    path_dict[path_name]['encap'].append(path_encap)
-                    path_dict[path_name]['epg'].append(path_locale.split('uni/ldev-[')[1].split(']')[0])
-                    path_dict[path_name]['epg_descr'].append('L4_L7_Device')
-                    path_bd = path_locale.split(']-bd-[')[1].split('/BD-')[1].split(']')[0]
-                    path_bd_tenant = path_locale.split(']-bd-[')[1].split('/tn-')[1].split('/')[0]
-                    if path_bd_tenant == 'common': path_bd = '*' + path_bd
-                    path_dict[path_name]['bd'].append(path_bd)
-                if 'uni/epp/rtd-' in path_dn and '/out-' in path_dn and '/instP-' in path_dn:
-                    path_locale = str(path_dn.split('uni/epp/rtd-[')[1].split(']')[0])
-                    path_dict[path_name]['mode'].append(path_mode)
-                    path_dict[path_name]['encap'].append(path_encap)
-                    path_dict[path_name]['epg'].append(path_locale)
-                    path_dict[path_name]['epg_descr'].append('External_EPG')
-                    path_dict[path_name]['bd'].append('N/A')
+                    if 'uni/epp/fv-' in path_dn and '/ap-' in path_dn and '/epg-' in path_dn:
+                        path_locale = str(path_dn.split('uni/epp/fv-[')[1].split(']')[0])
+                        path_dict[path_name]['mode'].append(path_mode)
+                        path_dict[path_name]['encap'].append(path_encap)
+                        path_dict[path_name]['epg'].append(path_locale)
+                        if path_locale in epg_name_dict.keys():
+                            path_dict[path_name]['epg_descr'].append(epg_name_dict[path_locale]['descr'])
+                        else:
+                            path_dict[path_name]['epg_descr'].append('')
+                        if path_locale in rsbd_dict.keys():
+                            path_dict[path_name]['bd'].append(rsbd_dict[path_locale]['name'])
+                        else:
+                            path_dict[path_name]['bd'].append('')
+                    if 'uni/epp/fv-' in path_dn and '/lDevVip-' in path_dn and ']-ctx-[' in path_dn and ']-bd-[' in path_dn and '/BD-' in path_dn:
+                        path_locale = str(path_dn.split('uni/epp/fv-[')[1])
+                        path_dict[path_name]['mode'].append(path_mode)
+                        path_dict[path_name]['encap'].append(path_encap)
+                        path_dict[path_name]['epg'].append(path_locale.split('uni/ldev-[')[1].split(']')[0])
+                        path_dict[path_name]['epg_descr'].append('L4_L7_Device')
+                        path_bd = path_locale.split(']-bd-[')[1].split('/BD-')[1].split(']')[0]
+                        path_bd_tenant = path_locale.split(']-bd-[')[1].split('/tn-')[1].split('/')[0]
+                        if path_bd_tenant == 'common': path_bd = '*' + path_bd
+                        path_dict[path_name]['bd'].append(path_bd)
+                    if 'uni/epp/rtd-' in path_dn and '/out-' in path_dn and '/instP-' in path_dn:
+                        path_locale = str(path_dn.split('uni/epp/rtd-[')[1].split(']')[0])
+                        path_dict[path_name]['mode'].append(path_mode)
+                        path_dict[path_name]['encap'].append(path_encap)
+                        path_dict[path_name]['epg'].append(path_locale)
+                        path_dict[path_name]['epg_descr'].append('External_EPG')
+                        path_dict[path_name]['bd'].append('N/A')
         return path_dict
 
     def get_vlan_dict(self):
@@ -1654,7 +1666,7 @@ class aciDB:
                     port_dict[intf_name]['opersterr'] = str(ethpmPhysIf['ethpmPhysIf']['attributes']['operStQual'])
                     if port_dict[intf_name]['bundleindex'] == 'unspecified': port_dict[intf_name]['bundleindex'] = ''
 
-        if limit is 'full':
+        if limit == 'full':
             port_stat_dict = self.get_port_stat_dict()
             for intf_name in port_stat_dict.keys():
                 try:
@@ -1726,6 +1738,8 @@ class aciDB:
                                 if path_names[0] in ipg_dict[ipg_obj]['interfaces']:
                                     path_type = ipg_dict[ipg_obj]['type']
                                     path_ipg = ipg_dict[ipg_obj]['name']
+                    elif 'pathgrp-' in path_name:
+                        path_name = path_name.split('/pathgrp-[')[1].split(']')[0]
                     else:
                         path_name = path_name.split('/pathep-[')[1].split(']')[0]
                         if path_name in ipg_dict.keys():
@@ -1952,6 +1966,32 @@ class aciDB:
                 lldp_dict[lldp_name]['remote_mac'] = str(lldp['lldpAdjEp']['attributes']['chassisIdV'])
 
         return lldp_dict
+    
+    
+    def get_lldp_ip_dict(self):
+        lldp_ip_dict = {}
+        url = '/api/class/lldpAdjEp.json'
+        get_url = self.apic + url
+        resp = self.mysession.get(get_url, verify=False)
+        lldps = json.loads(resp.text)['imdata']
+
+        for lldp in lldps:
+            if "lldpAdjEp" in lldp:
+                lldp_dn = str(lldp['lldpAdjEp']['attributes']['dn'])
+                lldp_node = lldp_dn.split('/node-')[1].split('/')[0]
+                lldp_port = lldp_dn.split('/if-[')[1].split(']')[0]
+                lldp_name = lldp_node + '-' + lldp_port
+                lldp_mgmtip = str(lldp['lldpAdjEp']['attributes']['mgmtIp'])
+                if lldp_mgmtip not in lldp_ip_dict.keys():
+                    lldp_ip_dict[lldp_mgmtip] = {}
+                    lldp_ip_dict[lldp_mgmtip]['name'] = lldp_mgmtip
+                    lldp_ip_dict[lldp_mgmtip]['ports'] = [lldp_name]
+
+                else:
+                    lldp_ip_dict[lldp_mgmtip]['ports'].append(lldp_name)
+
+        return lldp_ip_dict
+        
 
     def get_l3out_name_dict(self):
         l3out_name_dict = {}
@@ -2266,9 +2306,9 @@ class aciDB:
                        '\n'.join(contract_dict[contract_dn]['cepg_list']),
                        '\n'.join(contract_dict[contract_dn]['pepg_list']),
                        '\n'.join(entry_name_list), '\n'.join(entry_stateful_list), '\n'.join(entry_type_list),
-                       '\n'.join(entry_protocol_list), '\n'.join(entry_ports_list), '\n'.join(entry_dir_list)]
+                       '\n'.join(entry_protocol_list), '\n'.join(entry_ports_list)]
                 result.append(row)
-        result_headers = 'Name, Source, Destination, Entries, FW, Type, Prot, Ports, Direction'
+        result_headers = 'Name, Source, Destination, Entries, FW, Type, Prot, Ports'
         ret_dict[result_headers] = sorted(result)
         return ret_dict
 
@@ -3159,11 +3199,14 @@ userlog = []
 
 #'site', 'apic_display_name', 'apic_ip', 'apic_dnsname', "siteid", 'schema', 'template_name', 'mso_url', 'login_domain'
 
-apic_dict = {
-            'sandboxapic': ['SBX', 'sandboxapicdc', 'sandboxapicdc.cisco.com', 'sandboxapicdc.cisco.com',
-                            "5e21cfbbf90000f300c7345a", '5e21d0da2100005d01915aa8', 'sm-one-Template',
-                            'https://192.168.230.135', '0000ffff0000000000000090'],
-            }
+apic_dict = {}
+with open('apic_dict.txt') as f:
+     
+    for lines in f.readlines():
+        apic_details = lines.split(',')
+        if len(apic_details) > 1:
+            apic_dict[apic_details[0]] =  apic_details    
+       
 apic_list = sorted(apic_dict.keys())
 apic_list.insert(0, 'Choose APIC')
 
@@ -3212,7 +3255,7 @@ class aciapp(BaseView):
         login = str(request.form['username'])
         password = str(request.form['password'])
         selectapic = str(request.form['selectapic'])
-        apic = apic_dict[selectapic][2]
+        apic = apic_dict[selectapic][1].strip()
         url = "https://" + apic
         aci = aciDB(url)
         login_apic = aci.login(login, password, url)
@@ -3604,4 +3647,4 @@ admin = Admin(app, url='/', base_template='index-static.html', )
 admin.add_view(aciapp(name='aciapp'))
 
 if __name__ == '__main__':
-    serve(app, host='0.0.0.0', port='8888', url_scheme='http')
+    serve(app, host='0.0.0.0', port='8080', url_scheme='http')
