@@ -32,17 +32,17 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-            <a class="navbar-brand" href="/"><img style="height: 30px;" src="/static/images/netdevops-logo.gif"></a>
+            <a class="navbar-brand" href="https://www.talapupa.com" target="_blank"><img style="height:30px; display:inline;" src="/static/images/MediumSquareLogo.jpg">Talapupa Limited</a>
         </div>
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
-              <li><h4><span class='text-info'>ACI APP Version 2.2</span></h4></li>
+              <li><h4><span class='text-info'>ACI APP Version 2.6</span></h4></li>
           </ul>
           <ul class="nav navbar-nav navbar-left" style="font-size: 18px;">
 			{% if apic == None %}
             <li><a href="/aciapp" style="color:red">Please Login to APIC to continue</a></li>
 			{% else %} 
-			<li><a href='{{ url }}'>{{ username }}@{{ apic }}</a></li>
+			<li><a href='{{ url }}' target="_blank">{{ username }}@{{ apic }} </a></li>
 			{% endif %} 
           </ul>
         </div> <!--navbar-collapse-->
@@ -53,12 +53,12 @@
             <ul class="sidebar-nav" style="font-size: 12px;">
 
     <li class="sidebar-brand">
-        <a id="menu-toggle" id="aciapp1" href="/aciapp/" onclick="Updateurl1(this.id)">Home<span id="main_icon" class="glyphicon glyphicon-home"></span></a>
+        <a id="menu-toggle" href="/aciapp/?token={{token}}">Home<span id="main_icon" class="glyphicon glyphicon-home"></span></a>
     </li>
-
+	
 	<div id="sidebar-footer">
         <ul class="sidebar-nav">
-            <li><a id="aciapp2" href="/aciapp/" onclick="Updateurl1(this.id)">APIC</a></li>
+            <li><a href="/aciapp/?token={{token}}">APIC</a></li>
         </ul>
     </div>
 
