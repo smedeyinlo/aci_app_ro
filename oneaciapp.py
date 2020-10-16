@@ -3200,7 +3200,7 @@ userlog = []
 #'site', 'apic_display_name', 'apic_ip', 'apic_dnsname', "siteid", 'schema', 'template_name', 'mso_url', 'login_domain'
 
 apic_dict = {}
-with open('apic_dict.txt') as f:
+with open('apics.txt') as f:
      
     for lines in f.readlines():
         apic_details = lines.split(',')
