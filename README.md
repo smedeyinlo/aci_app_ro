@@ -24,6 +24,6 @@ Open browser and type localhost:8080
 Edit apics.txt file and add addtional APIC FQDN or IP Address
 
 # Usage
-Login with username and password. Then select the APIC from the list.
-
+Login with username and password. Then select the APIC from the list.                                                                                  
+![Login Screenshot](static/images/screenshot1.png)
 
