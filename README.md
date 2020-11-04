@@ -25,7 +25,7 @@ Edit apics.txt file and add addtional APIC FQDN or IP Address
 
 # Usage
 Login with username and password. Then select the APIC from the list.                                                                                  
-![Login Screenshot](static/images/screenshot1.png)
+![Login Screenshot](static/images/Screenshot1.png)
 
 Select from left side bar menu to show results of read only API queries to the APIC.                                                                                  
 ![BD Screenshot](static/images/Screenshot2.png)
