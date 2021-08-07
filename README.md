@@ -8,7 +8,7 @@ It is limited in scope to common things I find useful and you will need a basic 
 A running version is published at the following link: https://acicli.talapupa.com point to the Cisco's online Sandbox  APIC 
 https://sandboxapicdc.cisco.com                                                                                  
 username: admin                                                                                  
-password: ciscopsdt                                                                                  
+password: !v3G@!4@Y                                                                                  
 
 # Installation
 
