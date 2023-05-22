@@ -2,4 +2,4 @@ waitress==1.4.2
 Flask==1.1.1
 Flask-Admin==1.5.3
 Flask-WTF==0.14.3
-requests==2.22.0
+requests==2.31.0
